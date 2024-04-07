@@ -2,6 +2,8 @@ package com.yuliya.toys;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class ToysStore {
     private List<Toys> toys = new ArrayList<>();
@@ -63,7 +65,8 @@ public class ToysStore {
         return selectedToys;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        FileWriter writer = new FileWriter("result.txt");
         ToysStore store = new ToysStore();
         
         store.addToy(new Toys(0, "Кукла", 3, 0.2));
@@ -81,6 +84,11 @@ public class ToysStore {
             
             System.out.println(toy.getName());
             System.out.println(store.getTotalToysNumber());
+
+            writer.write(toy.getName() + "\n");
         }
+
+        writer.flush();
+        writer.close();
     }
 }
