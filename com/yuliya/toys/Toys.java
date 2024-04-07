@@ -28,7 +28,7 @@ public class Toys {
     }
 
     public void setNumber(int number) {
-        if (number <= 0) {
+        if (number < 0) {
             throw new IllegalArgumentException("Number must be greater than 0");
         }
         this.number = number;

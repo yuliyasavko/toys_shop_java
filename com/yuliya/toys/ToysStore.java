@@ -22,28 +22,65 @@ public class ToysStore {
     public List<Toys> getToys() {
         return toys; 
     }
+    
+    public int getTotalToysNumber() {
+        int counter = 0;
 
-    // public String getNextRandomToyName() {
-    //     double r = random.nextDouble();
+        for (Toys toy: toys) {
+            counter += toy.getNumber();
+        }
 
-    //     for (Toys toys: toys) {
+        return counter;
+    }
 
-    //     }
+    public Toys getNextRandomToyName() {
+        double totalToysProbability = 0;
+        for (Toys toy: toys) {
+            totalToysProbability += toy.getProbability();
+        }
 
-    // }
+        double r = random.nextDouble() * totalToysProbability;
+        double cumulativeProbability = 0;
+        
+        Toys selectedToys = null;
+        for (Toys toy: toys) {
+            cumulativeProbability += toy.getProbability();
+
+            if (r <= cumulativeProbability) {
+                selectedToys = toy;
+                break;
+            }
+        }
+        
+        if (selectedToys != null) {
+            selectedToys.decreaseNumber();
+
+            if (selectedToys.getNumber() == 0) {
+                toys.remove(selectedToys);
+            }
+        }
+
+        return selectedToys;
+    }
 
     public static void main(String[] args) {
         ToysStore store = new ToysStore();
         
-        // Создаем несколько игрушек и добавляем их в магазин
-        store.addToy(new Toys(0, "Кукла", 6, 0.1));
-        store.addToy(new Toys(1, "Медвежонок", 5, 0.3));
-        store.addToy(new Toys(2, "Конструктор", 8, 0.6));
+        store.addToy(new Toys(0, "Кукла", 3, 0.2));
+        store.addToy(new Toys(1, "Медвежонок", 4, 0.3));
+        store.addToy(new Toys(2, "Конструктор", 5, 0.5));
         
-        // Выводим на консоль список всех игрушек в магазине
-        System.out.println("Игрушки в магазине:");
-        for (Toys toy: store.getToys()) {
+        System.out.println("Розыгрыш игрушек:");
+        while (true) {
+            Toys toy = store.getNextRandomToyName();
+
+            if (toy == null) {
+                System.out.println("Игрушки закончились!");
+                break;
+            }
+            
             System.out.println(toy.getName());
+            System.out.println(store.getTotalToysNumber());
         }
     }
 }
